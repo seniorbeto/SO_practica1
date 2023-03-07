@@ -9,6 +9,7 @@ consola) utilizando las llamadas al sistema que considere oportunas.*/
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 
 
@@ -35,14 +36,38 @@ int main(int argc, char *argv[])
 
 	char buf[1];
 	int bytes;
+	int contador_bytes, contador_palabras, contador_lineas;
+	contador_bytes = 0;
+	contador_palabras = 0;
+	contador_lineas = 0;
 	
 	while ((bytes = read(fd, buf, 1)) > 0){ // Un char son 4 bytes
-		printf("Read: %c \n", buf[0]);
+
+		contador_bytes++;
+
+		if (buf[0] == '	' || buf[0] == '\t'){
+			contador_palabras++;
+		}
+		if (buf[0] == '\n'){
+			contador_lineas++;
+			contador_palabras++;
+			contador_bytes++; // El salto de línea (\n)ccuentan como 2 bytes
+		}
 	}
 	
 	if (bytes < 0){
 		perror("ERROR DE LECTURA");
 		exit(-1);
 	}
-	
+	else if (bytes == 0){
+		contador_palabras++;
+	}
+
+	printf("%d ", contador_lineas);
+	printf("%d ", contador_palabras);
+	printf("%d ", contador_bytes);
+	printf("%s\n", argv[1]);
+
+
+	return 0;
 }
