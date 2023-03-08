@@ -7,10 +7,23 @@
 #include <string.h>
 
 
-int main(int argc, char *argv[])
-{
-	
+int main(int argc, char *argv[]){
+	DIR *dd;
+	if (argc == 1){
+		dd = opendir(".");
+	}
+	else{
+		dd = opendir(argv[1]);
+	}
+	if (dd == NULL){
+		perror("Error en la apertura del directorio");
+		return(-1);
+	}
 
+	struct dirent *dir;
+	while((dir = readdir(dd)) != NULL){
+		printf("%s\n", dir->d_name);
+	}
+	closedir(dd);
 	return 0;
 }
-
