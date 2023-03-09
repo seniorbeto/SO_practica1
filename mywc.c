@@ -13,8 +13,7 @@ consola) utilizando las llamadas al sistema que considere oportunas.*/
 
 
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
 
 	//If less than two arguments (argv[0] -> program, argv[1] -> file to process) print an error y return -1
 	if(argc < 2)
@@ -51,7 +50,6 @@ int main(int argc, char *argv[])
 		if (buf[0] == '\n'){
 			contador_lineas++;
 			contador_palabras++;
-			contador_bytes++; // El salto de línea (\n)ccuentan como 2 bytes
 		}
 	}
 	
@@ -68,6 +66,6 @@ int main(int argc, char *argv[])
 	printf("%d ", contador_bytes);
 	printf("%s\n", argv[1]);
 
-
+	close(fd);
 	return 0;
 }
