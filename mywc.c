@@ -55,6 +55,7 @@ int main(int argc, char *argv[]){
 	
 	if (bytes < 0){
 		perror("ERROR DE LECTURA");
+		close(fd);
 		exit(-1);
 	}
 	else if (bytes == 0){

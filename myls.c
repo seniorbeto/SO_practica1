@@ -16,6 +16,7 @@ de todas las entradas de dicho directorio, imprimiendo una entrada por lı́nea.
 #endif
 
 int main(int argc, char *argv[]){
+	
 	DIR *dd;
 	if (argc == 1){
 		char buf[PATH_MAX];

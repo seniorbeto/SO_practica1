@@ -12,6 +12,8 @@ pasado por argumentos, imprimiendo una entrada por lı́nea.*/
 #include <sys/types.h>
 #include <unistd.h>
 
+#define BUF_MAX 2000
+
 
 
 int main(int argc, char *argv[])
@@ -20,13 +22,13 @@ int main(int argc, char *argv[])
     /* If less than two arguments (argv[0] -> program, argv[1] -> file to save environment) print an error y return -1 */
     if(argc < 3)
     {
-    	printf("Too few arguments\n");
+    	printf("NO HAY SUFICIENTES ARGUMENTOS\n");
     	return -1;
     }
 
     // Abrimos el fichero proporcionado "env.txt"
     int fd1;
-    fd1 = open("/home/natalia/Escritorio/SO_practica1/env.txt", O_RDONLY);
+    fd1 = open("env.txt", O_RDONLY);
 
     if (fd1 < 0){
         perror("ERROR DE APERTURA DEL FICHERO 'env.txt'");
@@ -50,35 +52,28 @@ int main(int argc, char *argv[])
     char variable[len];
     strcpy(variable, argv[1]);
     // Añadimos un "="
-    char igual[1] = "=";
-    strcat(variable, igual);
+    strcat(variable, "=");
     // Contador de posicion de la letra
     int i = 0;
     int escrito = 0;
     int seguir_comprobando = 1;
     int primera_iteracion = 1;
     // Buf de escritura del resultado
-    char buf_escritura[1000]; // cte??
+    char buf_escritura[BUF_MAX];
 	
     // Leemos el contenido del fichero letra a letra:
     // Se acabará el while si se acaba de leer el archivo y no ha habido
     // coincidencia o si la ha habido y ya se ha escrito el resultado
     // en el fichero de salida
-    printf("valor de len: %d \n", len);
-    printf("valor de variable: %s \n", variable);
 	while ((bytes = read(fd1, buf, 1)) > 0 && escrito == 0){ 
 
         if (seguir_comprobando == 1){
 
             if (buf[0] == variable[i]){
-                printf("sumando i\n");
-                printf("valor de buf: %c \n", buf[0]);
                 i++;
-                printf("valor de i: %d \n", i);
                 seguir_comprobando = 1;
             }
             else{
-                printf("igualando i a 0 \n");
                 i = 0;
                 seguir_comprobando = 0;
             }
@@ -91,19 +86,21 @@ int main(int argc, char *argv[])
         }        
 
         if (i == len){
-            printf("variable encontrada \n");
             seguir_comprobando = 0;
             if (buf[0] == '\n'){
+                // Añadimos el salto de línea
+                strcat(buf_escritura, "\n");
                 escrito = 1;
             }
             else{
                 if (primera_iteracion == 1){
-                primera_iteracion = 0; 
-                strcpy(buf_escritura, variable);
+                    primera_iteracion = 0; 
+                    strcpy(buf_escritura, variable);
                 }
                 else{
-                    printf("metiendo en el buffer: %d \n", putchar(buf[0]));
-                    strcat(buf_escritura, putchar(buf[0]));
+                    // Agregamos el primer caracteres del buf al destino, 
+                    // más un carácter nulo de terminación con 'strncat'.
+                    strncat(buf_escritura, buf, 1);
                 }
             }
         }
@@ -111,12 +108,25 @@ int main(int argc, char *argv[])
 	
 	if (bytes < 0){
 		perror("ERROR DE LECTURA DEL FICHERO 'env.txt'");
+        close(fd1);
+        close(fd2);
 		exit(-1);
 	}
+
     printf("%s", buf_escritura);
+    // Antes de empezar a escribir en el fichero, vacíamos su contenido
+    if (ftruncate(fd2, 0) < 0){
+        perror("ERROR DE VACIADO DEL FICHERO DE SALIDA");
+        close(fd1);
+        close(fd2);
+        exit(-1);
+    }
     // Escribimos el contenido del buf en el fichero de salida
-    if (write(fd2, buf_escritura, sizeof(buf_escritura)) < 0){
+    // El número de bytes a escribir será strlen del buf de escritura
+    if (write(fd2, buf_escritura, strlen(buf_escritura)) < 0){
         perror("ERROR DE ESCRITURA EN EL FICHERO DE SALIDA");
+        close(fd1);
+        close(fd2);
         exit(-1);
     }
 
