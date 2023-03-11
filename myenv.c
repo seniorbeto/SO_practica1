@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
                     primera_iteracion = 0; 
                     strcpy(buf_escritura, variable);
                 }
-                // En las siguientes añadimos el primer caractere del buf 
+                // En las siguientes añadimos el primer caracter del buf 
                 // al destino, más un carácter nulo de terminación con 'strncat'
                 else{
                     strncat(buf_escritura, buf, 1);
