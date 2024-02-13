@@ -17,7 +17,7 @@ Definimos el tamaño máximo que puede llegar a tener la ruta del directorio
 en caso de que ésta no esté ya definida.
 */
 #ifndef PATH_MAX
-#define PATH_MAX 200
+#define PATH_MAX 255
 #endif
 
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
 	if(argc > 2)
 	{
 		printf("ERROR: Hay demasiados argumentos, debe recibir un directorio o nada\n");
-		exit(-1);
+		return -1;
 	}
 
 	/* Si no se especifica ningún directorio obtenemos el directorio actual */
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 
 	if (dd == NULL){
 		perror("ERROR EN LA APERTURA DEL DIRECTORIO");
-		exit(-1);
+		return -1;
 	}
 
 	/* Leemos cada una de las entradas del directorio e imprimimos su nombre */

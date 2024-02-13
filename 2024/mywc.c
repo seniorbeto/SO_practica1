@@ -20,12 +20,12 @@ int main(int argc, char *argv[]){
 	if(argc < 2)
 	{
 		printf("ERROR: No hay suficientes argumentos, debe recibir un fichero\n");
-		exit(-1);
+		return -1;
 	}
 	else if(argc > 2)
 	{
 		printf("ERROR: Hay demasiados argumentos, debe recibir un fichero\n");
-		exit(-1);
+		return -1;
 	}
 
 	/* Abrimos el fichero pasado como parámetro */
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]){
 
 	if (fd < 0){
 		perror("ERROR DE APERTURA");
-		exit(-1);
+		return -1;
 	}
 
 	/* Leemos el contenido del fichero byte a byte y contamos */
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
 	if (bytes < 0){
 		perror("ERROR DE LECTURA");
 		close(fd);
-		exit(-1);
+		return -1;
 	}
 	/* Si hemos llegado al final, contamos la última palabra */
 	else if (bytes == 0 && vacio == 0){    
