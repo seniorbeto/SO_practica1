@@ -1,3 +1,4 @@
 .vscode
 output
 archivos_a_entregar
+*.o
