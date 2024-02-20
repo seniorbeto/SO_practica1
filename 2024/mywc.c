@@ -19,12 +19,12 @@ int main(int argc, char *argv[]){
 	/* Si recibe menos o más de un argumento imprime error y devuelve -1 */
 	if(argc < 2)
 	{
-		printf("ERROR: No hay suficientes argumentos, debe recibir un fichero\n");
+		printf("ERROR: No hay suficientes argumentos, debe recibir un fichero como unico argumento\n");
 		return -1;
 	}
 	else if(argc > 2)
 	{
-		printf("ERROR: Hay demasiados argumentos, debe recibir un fichero\n");
+		printf("ERROR: Hay demasiados argumentos, debe recibir un fichero como unico argumento\n");
 		return -1;
 	}
 
@@ -47,16 +47,16 @@ int main(int argc, char *argv[]){
 	/* Diferenciador entre fichero vacío y fichero leído */
 	int vacio = 1;
 	
-	while ((bytes = read(fd, buf, 1)) > 0){ 
+	while ((bytes = read(fd, buf, 1)) > 0){
 
 		vacio = 0;
 		contador_bytes++;
 
-		if (buf[0] == '	' || buf[0] == '\t'){
+		if (strncmp(buf, " ", 1) == 0 || strncmp(buf, "\t", 1) == 0){
 			contador_palabras++;
 		}
 		
-		if (buf[0] == '\n'){
+		if (strncmp(buf, "\n", 1) == 0){
 			contador_lineas++;
 			contador_palabras++;
 		}
